@@ -1,10 +1,10 @@
 # Firmware - from fire-user 14 UP1A.231005.007 V816.0.8.0.UMXMIXM release-keys
-gz.img;AB
-lk.img;AB
-logo.bin:logo.img;AB
-md1img.img;AB
-preloader_fire.bin:preloader_raw.img;AB
-scp.img;AB
-spmfw.img;AB
-sspm.img;AB
-tee.img;AB
+gz.img;AB|2ede6c782c0e6072cb1328d318c150583d88bd0f
+lk.img;AB|90152c1a77f95f3a605e9266dd1c9c694520e33f
+logo.bin:logo.img;AB|367fc8cdf5e962eeff0ee22bfd868bd703b93637
+md1img.img;AB|7c5f95d34be6d6e7a6dd704b18f4f9618492f036
+preloader_fire.bin:preloader_raw.img;AB|5e9e89fbaf9f56ea9fa04144b5cb579d42d5001e
+scp.img;AB|349460a062b935870d76030be3c6b176b791d7d9
+spmfw.img;AB|f2e3758bfcbd43ee56e50e5465f1df154086dfae
+sspm.img;AB|ac315b611bf8e95b3964515bec8d5153e7101a0e
+tee.img;AB|6773779ced36650be524593e9ee1d9e8d4161f4d
