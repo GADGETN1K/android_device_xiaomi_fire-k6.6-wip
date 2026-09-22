@@ -724,6 +724,16 @@ vendor/thh/ta/e97c270ea5c44c58bcd3384a2fa2539e.ta|eaca44efdfe8dbc804e8217a3380b8
 vendor/thh/ta/isee_model.json|da39a3ee5e6b4b0d3255bfef95601890afd80709
 
 # NFC
+vendor/bin/hw/android.hardware.nqnfc-service.nxp|ea47fbe2ca25430d157ffa66a88595360072009a
+vendor/etc/init/init.vnd_fire.nfc.rc|7d1928ecafe08880bc8be7aa0887d23d59d5d140
+vendor/etc/init/nfc-service-nxp.rc|3143f97f228157cffb9485c62007bff44fecd4bf
+vendor/etc/vintf/manifest/nfc-service-nxp.xml|c269465ec1154f7ac1052d8075f47818882fcb41
+vendor/etc/libnfc-nci.conf|0e5f04c87158941ce484a58174c96919ae92a501
+vendor/lib/nfc_nci.nqx.default.hw.so|a56506b4aff68dc714c5e4f96c4bcef66d3364a2
+vendor/lib/nfc_nci_nxp.so|2c25a73f35b4a36edf55277f37fa432c75fd7127
+vendor/lib64/hw/android.hardware.nfc@1.0-impl.so|7e374ffd74ce03eb90b1d2509578de5605df3463
+vendor/lib64/nfc_nci.nqx.default.hw.so|d360ddecf631245c3d0202d0cf8faff9c603bb99
+vendor/lib64/nfc_nci_nxp.so|e6da1aaf56e996673bc0b5e499bd3d8201002c94
 vendor/lib64/libpn557_fw.so|73c3b9e8774ec701ccda47d3d9af81b3d8471127
 
 # NVRAM
