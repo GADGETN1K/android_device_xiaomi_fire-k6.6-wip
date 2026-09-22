@@ -243,8 +243,10 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     ueventd.mt6768.rc
 
+# HyperOS 2 loads first-stage fstab and recovery init from vendor_boot.
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/recovery/root/init.recovery.mt6768.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.mt6768.rc
+    $(LOCAL_PATH)/rootdir/etc/fstab.mt6768:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.mt6768 \
+    $(LOCAL_PATH)/rootdir/etc/init.recovery.mt6768.rc:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/init.recovery.mt6768.rc
 
 # Sensors
 PRODUCT_PACKAGES += \
