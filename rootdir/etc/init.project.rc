@@ -1,15 +1,32 @@
+import /vendor/etc/init/hw/init.mtkgki.rc
+import init.mishow.ctl.rc
+import /vendor/etc/init/init.charge_logger.rc
+
 # MTK project .rc configure
 
 on early-init
     exec_background u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules trace_mmstat.ko
 
-on init
-    setprop ro.boot.hardware.revision ${ro.boot.rsc}
 
+on boot
+    chown system system /dev/xiaomi-touch
+    chmod 0666 /dev/xiaomi-touch
+
+on init
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
     mkdir /storage/usbotg 0700 root root
 
 on post-fs-data
+
+#NFC
+    mkdir /data/vendor/nfc 0770 nfc nfc
+    chmod 0660 /dev/nq-nci
+    chown nfc nfc /dev/nq-nci
+    chmod 0660 /dev/p73
+    chown nfc nfc /dev/p73
+
+#touch
+    chown system system /sys/class/touch/touch_dev/palm_sensor
 
 #Camera
     chmod 0660 /dev/MAINAF
@@ -57,24 +74,6 @@ on post-fs-data
     chmod 0666 /data/vendor/camera/com.xiaomi.dcal.wu.data
     chown system system /data/vendor/camera/com.xiaomi.dcal.wd.data
     chown system system /data/vendor/camera/com.xiaomi.dcal.wu.data
-
-#Flashlight aw3641e/ocp8111a bringup code
-    chmod 0666 /sys/devices/platform/flashlights_aw3641e/aw3641e_FLASH
-
-#SMB
-    chown system system /proc/smb/ScreenComm
-    chmod 0660 /proc/smb/ScreenComm
-
-    chmod 0660 /dev/spm
-    chown system system /dev/spm
-
-#touch
-    chown system system /sys/class/touch/touch_dev/palm_sensor
-
-#hardwareinfo
-    chmod 0660 /dev/hardwareinfo
-    chown root system /dev/hardwareinfo
-
 #for fingerprint
     chown system system /sys/bus/spi/devices/spi0.0/clk_enable
     chown system system /sys/bus/spi/devices/spi0.0/wakeup_enable
@@ -85,6 +84,13 @@ on post-fs-data
     chmod 0200 /sys/bus/spi/devices/spi0.0/wakeup_enable
     chmod 0600 /sys/bus/spi/devices/spi0.0/irq
 
+
+#SMB
+    chown system system /proc/smb/ScreenComm
+    chmod 0660 /proc/smb/ScreenComm
+
+    chmod 0660 /dev/spm
+    chown system system /dev/spm
 #TouchPad nvt settings for tp_grip_area
     on property:sys.tp.grip_enable=0
     write /proc/nvt_edge_reject_switch 1
@@ -100,6 +106,14 @@ on post-fs-data
     on property:sys.tp.grip_enable=270
     write /sys/bus/spi/devices/spi2.0/fts_edge_mode 2
 
+    #hardwareinfo
+    chmod 0660 /dev/hardwareinfo
+    chown root system /dev/hardwareinfo
+
+# for mishow
+    chown system system /sys/class/power_supply/battery/input_suspend
+    chmod 0777 /sys/class/power_supply/battery/input_suspend
+
 on init
     # Refer to http://source.android.com/devices/tech/storage/index.html
     # It said, "Starting in Android 4.4, multiple external storage devices are surfaced to developers through
@@ -114,6 +128,14 @@ service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/
     class late_start
     disabled
 
+service touchfeature-service /odm/bin/hw/vendor.xiaomi.hw.touchfeature-service
+    interface aidl vendor.xiaomi.hw.touchfeature.ITouchFeature/default
+    class hal
+    user system
+    group system system input
+    capabilities SYS_NICE
+    ioprio rt 4
+
 # start mmstat
 on property:sys.boot_completed=1
     mkdir /sys/kernel/tracing/instances/mmstat 711
@@ -121,23 +143,4 @@ on property:sys.boot_completed=1
     write /sys/kernel/tracing/instances/mmstat/buffer_size_kb 16
     write /sys/kernel/tracing/instances/mmstat/events/mmstat/enable 1
     write /sys/kernel/tracing/instances/mmstat/tracing_on 1
-
-service vendor.nfc_hal_service /vendor/bin/hw/android.hardware.nfc@1.2-service
-    class hal
-    user nfc
-    group nfc
-    disabled
-    override
-
-on property:ro.boot.board_id=S98029AA1
-    start vendor.nfc_hal_service
-    setprop ro.vendor.se.type HCE,UICC
-    setprop ro.vendor.nfc.repair 1
-
-on property:ro.boot.board_id=S98029BA1
-    start vendor.nfc_hal_service
-    setprop ro.vendor.se.type HCE,UICC
-    setprop ro.vendor.nfc.repair 1
-
-on property:ro.boot.board_id=TBD
-    start vendor.nfc_hal_service
+    write /proc/sys/vm/watermark_scale_factor 47

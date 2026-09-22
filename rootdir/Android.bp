@@ -11,12 +11,6 @@ prebuilt_etc {
     vendor_ramdisk_available: true,
 }
 
-prebuilt_etc {
-    name: "init.mt6768.power.rc",
-    src: "etc/init.mt6768.power.rc",
-    sub_dir: "init/hw",
-    vendor: true,
-}
 
 prebuilt_etc {
     name: "init.connectivity.rc",
