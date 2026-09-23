@@ -77,9 +77,6 @@ $(call soong_config_set_bool,android_hardware_audio,skip_speaker_layout_channel_
 PRODUCT_PACKAGES += \
     android.hardware.ir-service.example
 
-# Bluetooth
-PRODUCT_PACKAGES += \
-    android.hardware.bluetooth-service.mediatek
 
 # Cgroup
 PRODUCT_COPY_FILES += \
@@ -212,7 +209,6 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.lineage-libperfmgr \
     vendor.mediatek.hardware.mtkpower@1.2-service.stub \
     libmtkperf_client \
     libmtkperf_client_vendor
@@ -231,7 +227,6 @@ include hardware/mediatek/configs/properties/vendor_logtag.mk
 PRODUCT_PACKAGES += \
     chipinfo \
     fstab.mt6768 \
-    fstab.mt6768.ramdisk \
     init.connectivity.rc \
     init.modem.rc \
     init.mt6768.rc \
@@ -307,3 +302,8 @@ PRODUCT_COPY_FILES += \
 
 # Inherit the proprietary files
 $(call inherit-product, vendor/xiaomi/fire/fire-vendor.mk)
+
+# Prebuilt boot artifacts
+PRODUCT_COPY_FILES += \
+    device/xiaomi/fire-kernel/dtb.img:dtb.img \
+    device/xiaomi/fire-kernel/kernel:kernel

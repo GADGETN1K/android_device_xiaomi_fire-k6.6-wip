@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+import re
+from pathlib import Path
+
 from extract_utils.fixups_blob import (
     blob_fixup,
     blob_fixups_user_type,
@@ -25,6 +28,66 @@ namespace_imports = [
     'hardware/xiaomi',
     'vendor/xiaomi/fire'
 ]
+
+
+
+def apply_soong_prebuilt_fixups():
+    path = Path(__file__).resolve().parents[3] / 'vendor/xiaomi/fire/Android.bp'
+    text = path.read_text()
+    output = []
+    pos = 0
+
+    while True:
+        match = re.search(r'cc_prebuilt_[^{]+\{', text[pos:])
+        if not match:
+            output.append(text[pos:])
+            break
+
+        start = pos + match.start()
+        brace = pos + match.end() - 1
+        output.append(text[pos:start])
+
+        depth = 0
+        end = None
+        for index in range(brace, len(text)):
+            if text[index] == '{':
+                depth += 1
+            elif text[index] == '}':
+                depth -= 1
+                if depth == 0:
+                    end = index + 1
+                    break
+        assert end is not None
+
+        block = text[start:end]
+        name = re.search(r'name:\s*"([^"]+)"', block).group(1)
+
+        # Build-graph-only compatibility for HOS2 prebuilts on Android 16.
+        block = block.replace(
+            '                "libaudio_aidl_conversion_common_ndk",\n', ''
+        )
+        block = re.sub(
+            r'^\s*"android\.hardware\.graphics\.common-V[1-6]-ndk",\n',
+            '',
+            block,
+            flags=re.M,
+        )
+
+        if name == 'libmtkcam_hal_aidl_common':
+            block = block.replace(
+                '"android.hardware.camera.common-V2-ndk"',
+                '"android.hardware.camera.common-V1-ndk"',
+            )
+        elif name == 'vendor.mediatek.hardware.pq_aidl-impl':
+            block = block.replace(
+                '                "vendor.mediatek.hardware.pq_aidl-V7-ndk",\n',
+                '',
+            )
+
+        output.append(block)
+        pos = end
+
+    path.write_text(''.join(output))
 
 
 def lib_fixup_vendor_suffix(lib: str, partition: str, *args, **kwargs):
@@ -139,3 +202,4 @@ module = ExtractUtilsModule(
 if __name__ == '__main__':
     utils = ExtractUtils.device(module)
     utils.run()
+    apply_soong_prebuilt_fixups()
